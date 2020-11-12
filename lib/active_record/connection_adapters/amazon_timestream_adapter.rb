@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_record/connection_handling'
 require 'active_record/connection_adapters/abstract_adapter'
 require 'active_record/connection_adapters/amazon_timestream/database_statements'
 require 'active_record/connection_adapters/amazon_timestream/quoting'
@@ -11,6 +10,16 @@ require 'aws-sdk-timestreamquery'
 require 'aws-sdk-timestreamwrite'
 
 module ActiveRecord
+  class Base
+    def self.amazon_timestream_connection(config)
+      config = config.symbolize_keys
+
+      raise ArgumentError, 'No database specified. Missing argument: database.' unless config.key?(:database)
+
+      ConnectionAdapters::AmazonTimestreamAdapter.new(logger, config)
+    end
+  end
+
   module ConnectionAdapters
     class AmazonTimestreamAdapter < AbstractAdapter
       ADAPTER_NAME = 'Amazon Timestream'
