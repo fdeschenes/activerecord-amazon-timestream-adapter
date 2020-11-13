@@ -8,7 +8,7 @@ module ActiveRecord
       module DatabaseStatements
         def execute(sql, name = nil)
           log(sql, name) do
-            @query.query({ query_string: sql })
+            @connection.query({ query_string: sql })
           end
         end
 
@@ -18,7 +18,7 @@ module ActiveRecord
 
         def exec_query(sql, name = 'SQL', binds = [])
           log(sql, name, binds) do
-            response = @query.query query_string: sql
+            response = @connection.query query_string: sql
 
             ActiveRecord::Result.new response.column_info.map(&:name),
                                      response.rows.map { |r| r.data.map(&:scalar_value) },

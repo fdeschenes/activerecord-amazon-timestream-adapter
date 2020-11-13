@@ -7,16 +7,13 @@ module ActiveRecord
     module AmazonTimestream
       module SchemaStatements
         def tables(_name = nil)
-          response = @write.list_tables database_name: @config[:database]
-
-          response.tables.map(&:table_name)
+          response = @connection.query({ query_string: "SHOW TABLES FROM \"#{@database}\"" })
+          response.rows.map { |r| r.data[0].scalar_value }
         end
 
         def columns(table_name, _name = nil)
-          response = @query.query query_string: "SELECT * FROM #{quote_table_name(table_name)} LIMIT 1"
-          response.column_info.map do |column|
-            Column.new(column.name, nil, lookup_cast_type(column.type.scalar_type))
-          end
+          response = @connection.query({ query_string: "DESCRIBE \"#{@database}\".\"#{table_name}\"" })
+          response.rows.map { |r| Column.new(r.data[0].scalar_value, nil, lookup_cast_type(r.data[1].scalar_value)) }
         end
 
         def table_exists?(_table_name)
