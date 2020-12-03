@@ -16,13 +16,19 @@ module ActiveRecord
       raise ArgumentError, 'No database specified. Missing argument: database.' unless config.key?(:database)
 
       credentials = Aws::Credentials.new config[:username], config[:password] if config[:username] && config[:password]
-      connection = Aws::TimestreamQuery::Client.new credentials: credentials
+      connection = Aws::TimestreamQuery::Client.new credentials: credentials, endpoint: 'https://query-cell2.timestream.us-east-1.amazonaws.com'
 
-      ConnectionAdapters::AmazonTimestreamAdapter.new(connection, logger, config[:database])
+      ConnectionAdapters::AmazonTimestreamAdapter.new connection, logger, config[:database]
     end
   end
 
   module ConnectionAdapters
+    class AmazonTimestreamColumn < Column
+      def sql_type
+        @sql_type_metadata.class
+      end
+    end
+
     class AmazonTimestreamAdapter < AbstractAdapter
       ADAPTER_NAME = 'Amazon Timestream'
 
@@ -34,6 +40,10 @@ module ActiveRecord
         super(connection, logger)
         @database = database
         @visitor = Arel::Visitors::AmazonTimestream.new self
+      end
+
+      def prepared_statements
+        false
       end
 
       def supports_explain?

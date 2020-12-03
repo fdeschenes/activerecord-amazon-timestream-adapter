@@ -13,15 +13,21 @@ module ActiveRecord
 
         def columns(table_name, _name = nil)
           response = @connection.query({ query_string: "DESCRIBE \"#{@database}\".\"#{table_name}\"" })
-          response.rows.map { |r| Column.new(r.data[0].scalar_value, nil, lookup_cast_type(r.data[1].scalar_value)) }
+          response.rows.map do |r|
+            AmazonTimestreamColumn.new r.data[0].scalar_value, nil, lookup_cast_type(r.data[1].scalar_value)
+          end
         end
 
-        def table_exists?(_table_name)
+        def table_exists?(table_name)
           tables.include?(table_name)
         end
 
         def primary_key(_table_name)
           nil
+        end
+
+        def data_sources
+          tables
         end
       end
     end

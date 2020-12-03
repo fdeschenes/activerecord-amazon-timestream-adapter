@@ -16,7 +16,7 @@ module ActiveRecord
           exec_query(sql, name, binds).to_a.map(&:values)
         end
 
-        def exec_query(sql, name = 'SQL', binds = [])
+        def exec_query(sql, name = 'SQL', binds = [], prepare: false)
           log(sql, name, binds) do
             response = @connection.query query_string: sql
 
