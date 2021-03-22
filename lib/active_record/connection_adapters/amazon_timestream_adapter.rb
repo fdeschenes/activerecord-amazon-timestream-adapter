@@ -16,7 +16,7 @@ module ActiveRecord
       raise ArgumentError, 'No database specified. Missing argument: database.' unless config.key?(:database)
 
       credentials = Aws::Credentials.new config[:username], config[:password] if config[:username] && config[:password]
-      connection = Aws::TimestreamQuery::Client.new credentials: credentials, endpoint: 'https://query-cell2.timestream.us-east-1.amazonaws.com'
+      connection = Aws::TimestreamQuery::Client.new({ credentials: credentials }.compact)
 
       ConnectionAdapters::AmazonTimestreamAdapter.new connection, logger, config[:database]
     end
