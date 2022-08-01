@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '~> 2.4'
 
-  s.add_development_dependency 'bundler', '~> 1.3'
+  s.add_development_dependency 'bundler', '>= 2.2.33'
 
   s.add_dependency 'activerecord', '>= 4.2', '< 8'
   s.add_dependency 'aws-sdk-core', '~> 3.0'

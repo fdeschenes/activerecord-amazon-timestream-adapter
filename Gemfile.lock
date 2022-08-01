@@ -1,0 +1,52 @@
+PATH
+  remote: .
+  specs:
+    activerecord-amazon-timestream-adapter (0.0.5)
+      activerecord (>= 4.2, < 8)
+      aws-sdk-core (~> 3.0)
+      aws-sdk-timestreamquery (~> 1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (6.1.6.1)
+      activesupport (= 6.1.6.1)
+    activerecord (6.1.6.1)
+      activemodel (= 6.1.6.1)
+      activesupport (= 6.1.6.1)
+    activesupport (6.1.6.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
+    aws-eventstream (1.2.0)
+    aws-partitions (1.613.0)
+    aws-sdk-core (3.131.5)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.525.0)
+      aws-sigv4 (~> 1.1)
+      jmespath (~> 1, >= 1.6.1)
+    aws-sdk-timestreamquery (1.16.0)
+      aws-sdk-core (~> 3, >= 3.127.0)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.5.1)
+      aws-eventstream (~> 1, >= 1.0.2)
+    concurrent-ruby (1.1.10)
+    i18n (1.12.0)
+      concurrent-ruby (~> 1.0)
+    jmespath (1.6.1)
+    minitest (5.16.2)
+    tzinfo (2.0.5)
+      concurrent-ruby (~> 1.0)
+    zeitwerk (2.6.0)
+
+PLATFORMS
+  universal-darwin-21
+
+DEPENDENCIES
+  activerecord-amazon-timestream-adapter!
+  bundler (>= 2.2.33)
+
+BUNDLED WITH
+   2.3.19
