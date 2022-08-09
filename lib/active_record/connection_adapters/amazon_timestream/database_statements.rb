@@ -8,7 +8,7 @@ module ActiveRecord
       module DatabaseStatements
         def execute(sql, name = nil)
           log(sql, name) do
-            @connection.query({ query_string: sql })
+            @connection.query query_string: sql
           end
         end
 

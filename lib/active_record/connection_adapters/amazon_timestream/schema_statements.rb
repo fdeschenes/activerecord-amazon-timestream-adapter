@@ -7,14 +7,14 @@ module ActiveRecord
     module AmazonTimestream
       module SchemaStatements
         def tables(_name = nil)
-          response = @connection.query({ query_string: "SHOW TABLES FROM \"#{@database}\"" })
+          response = @connection.query query_string: "SHOW TABLES FROM \"#{@database}\""
           response.rows.map { |r| r.data[0].scalar_value }
         end
 
         def columns(table_name, _name = nil)
-          response = @connection.query({ query_string: "DESCRIBE \"#{@database}\".\"#{table_name}\"" })
+          response = @connection.query query_string: "DESCRIBE \"#{@database}\".\"#{table_name}\""
           response.rows.map do |r|
-            AmazonTimestreamColumn.new r.data[0].scalar_value, nil, lookup_cast_type(r.data[1].scalar_value)
+            AmazonTimestreamColumn.new r.data[0].scalar_value, nil, fetch_type_metadata(r.data[1].scalar_value)
           end
         end
 
