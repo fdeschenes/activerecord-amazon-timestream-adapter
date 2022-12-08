@@ -13,6 +13,7 @@ module Arel
 
       def quote_table_name_without_database(name)
         return name if name.is_a?(Arel::Nodes::SqlLiteral)
+        
         @connection.quote_table_name_without_database(name)
       end
 
