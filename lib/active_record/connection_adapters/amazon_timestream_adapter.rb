@@ -16,8 +16,7 @@ module ActiveRecord
       raise ArgumentError, 'No database specified. Missing argument: database.' unless config.key?(:database)
 
       credentials = if config[:username] && config[:password]
-                      Aws::Credentials.new(*config.values_at(:username, :password,
-                                                             :session_token))
+                      Aws::Credentials.new(*config.values_at(:username, :password, :session_token))
                     end
       connection = Aws::TimestreamQuery::Client.new({ credentials: credentials }.compact)
 
