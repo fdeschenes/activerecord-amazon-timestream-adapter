@@ -7,12 +7,26 @@ module ActiveRecord
     module AmazonTimestream
       module SchemaStatements
         def tables(_name = nil)
-          response = @connection.query query_string: "SHOW TABLES FROM \"#{@database}\""
+          response = if ActiveRecord::VERSION::STRING >= '7.1.0'
+                       with_raw_connection do |conn|
+                         conn.query query_string: "SHOW TABLES FROM \"#{@config[:database]}\""
+                       end
+                     else
+                       @connection.query query_string: "SHOW TABLES FROM \"#{@database}\""
+                     end
+
           response.rows.map { |r| r.data[0].scalar_value }
         end
 
         def columns(table_name, _name = nil)
-          response = @connection.query query_string: "DESCRIBE \"#{@database}\".\"#{table_name}\""
+          response = if ActiveRecord::VERSION::STRING >= '7.1.0'
+                       with_raw_connection do |conn|
+                        conn.query query_string: "DESCRIBE \"#{@config[:database]}\".\"#{table_name}\""
+                       end
+                     else
+                       @connection.query query_string: "DESCRIBE \"#{@config[:database]}\".\"#{table_name}\""
+                     end
+
           response.rows.map do |r|
             AmazonTimestreamColumn.new r.data[0].scalar_value, nil, fetch_type_metadata(r.data[1].scalar_value)
           end

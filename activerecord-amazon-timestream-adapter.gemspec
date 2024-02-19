@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'activerecord-amazon-timestream-adapter'
-  s.version = '0.0.5'
+  s.version = '0.0.6'
   s.author = 'Francois Deschenes'
   s.email = 'fdeschenes@me.com'
   s.summary = 'ActiveRecord Amazon Timestream Adapter'

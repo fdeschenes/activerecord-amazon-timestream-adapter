@@ -15,12 +15,16 @@ module ActiveRecord
 
       raise ArgumentError, 'No database specified. Missing argument: database.' unless config.key?(:database)
 
-      credentials = if config[:username] && config[:password]
-                      Aws::Credentials.new(*config.values_at(:username, :password, :session_token))
-                    end
-      connection = Aws::TimestreamQuery::Client.new({ credentials: credentials }.compact)
+      if ActiveRecord::VERSION::STRING >= '7.1.0'
+        ConnectionAdapters::AmazonTimestreamAdapter.new config
+      else
+        credentials = if config[:username] && config[:password]
+          Aws::Credentials.new(*config.values_at(:username, :password, :session_token))
+        end
+        connection = Aws::TimestreamQuery::Client.new({ credentials: credentials }.compact)
 
-      ConnectionAdapters::AmazonTimestreamAdapter.new connection, logger, config[:database]
+        ConnectionAdapters::AmazonTimestreamAdapter.new connection, logger, config[:database]
+      end
     end
   end
 
@@ -38,26 +42,41 @@ module ActiveRecord
       include AmazonTimestream::DatabaseStatements
       include AmazonTimestream::Quoting
 
-      def initialize(connection, logger, database)
-        super(connection, logger)
-        @database = database
-        @visitor = Arel::Visitors::AmazonTimestream.new self
+      if ActiveRecord::VERSION::STRING < '7.1.0'
+        def initialize(connection, logger = nil, database = nil)
+          super(connection, logger, database)
+          @database = database
+        end
+      end
+
+      def configure_connection
+        credentials = if @config[:username] && @config[:password]
+          Aws::Credentials.new(*@config.values_at(:username, :password, :session_token))
+        end
+        @raw_connection = Aws::TimestreamQuery::Client.new({ credentials: credentials }.compact)
+      end
+
+      def reconnect
+      end
+
+      def arel_visitor
+        Arel::Visitors::AmazonTimestream.new self
       end
 
       def prepared_statements
         false
       end
 
-      def supports_explain?
-        false
-      end
-
-      def requires_reloading?
-        false
+      def supports_common_table_expressions?
+        true
       end
 
       def active?
-        true
+        return true unless ActiveRecord::VERSION::STRING >= '7.1.0'
+
+        @lock.synchronize do
+          !@raw_connection.nil?
+        end
       end
 
       protected
