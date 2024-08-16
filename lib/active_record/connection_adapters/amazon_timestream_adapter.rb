@@ -29,6 +29,11 @@ module ActiveRecord
   end
 
   module ConnectionAdapters
+    if ActiveRecord::VERSION::STRING >= '7.2.0'
+      register 'amazon_timestream', 'ActiveRecord::ConnectionAdapters::AmazonTimestreamAdapter',
+               'active_record/connection_adapters/amazon_timestream/adapter'
+    end
+
     class AmazonTimestreamColumn < Column
       def sql_type
         @sql_type_metadata.class
