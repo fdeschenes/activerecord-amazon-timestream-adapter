@@ -17,7 +17,7 @@ module ActiveRecord
             end
           end
 
-          def internal_exec_query(sql, name = "SQL", binds = [], prepare: false, async: false)
+          def internal_exec_query(sql, name = "SQL", binds = [], prepare: false, async: false, allow_retry: false)
             log(sql, name, binds, async: async) do
               response = with_raw_connection { |conn| conn.query query_string: sql }
 
