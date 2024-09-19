@@ -25,6 +25,12 @@ module Arel
                         end
         collector << relation_name << '.' << quote_column_name(o.name)
       end
+
+      def visit_Arel_Nodes_Cte(o, collector)
+        collector << quote_table_name_without_database(o.name)
+        collector << " AS "
+        visit o.relation, collector
+      end
     end
   end
 end
