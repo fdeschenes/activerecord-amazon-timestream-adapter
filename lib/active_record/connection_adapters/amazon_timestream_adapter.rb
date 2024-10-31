@@ -36,7 +36,7 @@ module ActiveRecord
 
     class AmazonTimestreamColumn < Column
       def sql_type
-        @sql_type_metadata.class
+        @sql_type_metadata.type
       end
     end
 
