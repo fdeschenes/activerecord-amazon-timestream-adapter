@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'activerecord-amazon-timestream-adapter'
-  s.version = '0.0.7'
+  s.version = '0.0.8'
   s.author = 'Francois Deschenes'
   s.email = 'fdeschenes@me.com'
   s.summary = 'ActiveRecord Amazon Timestream Adapter'
@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'bundler', '>= 2.2.33'
 
-  s.add_dependency 'activerecord', '>= 4.2', '< 7.3'
+  s.add_dependency 'activerecord', '>= 4.2', '< 8.1'
   s.add_dependency 'aws-sdk-core', '~> 3.0'
   s.add_dependency 'aws-sdk-timestreamquery', '~> 1.0'
 end
